@@ -2416,7 +2416,7 @@ function memorySubtract() {
   memory -= value;
   updateMemoryIndicator();
 
-
+}
 // ------------------------------
 // Answer Preview (live result before = is pressed)
 // ------------------------------
