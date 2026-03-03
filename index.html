@@ -968,6 +968,16 @@ border-radius:15px;">
 
                               <!-- Result Display -->
                               <div id="physics-result"></div>
+                              <div class="calculator-display">
+                                <input type="text" id="result" readonly>
+                            
+                            <!-- Math Insight Feature -->
+                            <div id="math-insight" class="math-insight-box" style="display:none;"></div>
+
+                            <!--NEW FEATURE GOES HERE -->
+                            <div id="expression-dna" class="math-insight-box" style="display:none;"></div>
+                            <div id="expression-dna" class="math-insight-box" style="display:none;"></div>
+
 
                               <!-- Info Box -->
                               <div class="alert alert-info alert-sm py-2 px-3 mb-0" style="font-size: 0.85rem;">
@@ -1016,6 +1026,7 @@ border-radius:15px;">
                                   Clear
                                 </button>
                               </div>
+                              <button onclick="toggleDNA()">🧬 Analyze</button>
 
                               <!-- Result Display -->
                               <div id="pc-result" class="alert alert-info py-2 px-3 mb-0" style="display: none;">
@@ -1026,6 +1037,11 @@ border-radius:15px;">
                                 <div><strong>Description:</strong> <span id="pc-description"
                                     style="font-style: italic; color: #555;"></span></div>
                               </div>
+                              <!-- Math Insight Feature -->
+                              <div id="math-insight" class="math-insight-box" style="display:none;"></div>
+
+                              <!-- ✅ NEW FEATURE GOES HERE -->
+                              <div id="expression-dna" class="math-insight-box" style="display:none;"></div>
 
                               <!-- Examples -->
                               <div class="alert alert-light py-2 px-3 mt-3 mb-0 border" style="font-size: 0.85rem;">

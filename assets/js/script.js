@@ -3120,3 +3120,307 @@ function clearBMICalculator() {
     document.getElementById('bmi-height').value = '';
     document.getElementById('bmi-result').style.display = 'none';
 }
+// ======================================================
+// MATH INSIGHT MODE — UNIQUE INTELLIGENT FEATURE
+// ======================================================
+// Automatically analyzes every calculator result
+// Adds mathematical intelligence to your calculator
+// ======================================================
+
+function isPrime(n) {
+  if (n <= 1 || !Number.isInteger(n)) return false;
+  if (n <= 3) return true;
+  if (n % 2 === 0 || n % 3 === 0) return false;
+
+  for (let i = 5; i * i <= n; i += 6) {
+    if (n % i === 0 || n % (i + 2) === 0) return false;
+  }
+  return true;
+}
+
+// ---------- ROMAN NUMERAL ----------
+function toRoman(num) {
+  if (num <= 0 || num >= 4000) return null;
+
+  const map = [
+    [1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],
+    [100,"C"],[90,"XC"],[50,"L"],[40,"XL"],
+    [10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]
+  ];
+
+  let result = "";
+  for (const [value, symbol] of map) {
+    while (num >= value) {
+      result += symbol;
+      num -= value;
+    }
+  }
+  return result;
+}
+
+// ---------- FIBONACCI CHECK ----------
+function isPerfectSquare(x) {
+  const s = Math.sqrt(x);
+  return Number.isInteger(s);
+}
+
+function isFibonacci(n) {
+  return (
+    isPerfectSquare(5 * n * n + 4) ||
+    isPerfectSquare(5 * n * n - 4)
+  );
+}
+
+// ---------- MAIN INSIGHT ENGINE ----------
+function generateMathInsights(value) {
+
+  const insightBox = document.getElementById("math-insight");
+  if (!insightBox) return;
+
+  const num = Number(value);
+
+  if (!Number.isFinite(num)) {
+    insightBox.style.display = "none";
+    return;
+  }
+
+  let insights = [];
+
+  // EVEN / ODD
+  if (Number.isInteger(num)) {
+    insights.push(num % 2 === 0 ? "Even number" : "Odd number");
+  }
+
+  // PRIME / COMPOSITE
+  if (Number.isInteger(num) && num > 1) {
+    insights.push(isPrime(num) ? "Prime number" : "Composite number");
+  }
+
+  // PERFECT SQUARE
+  const sqrt = Math.sqrt(num);
+  if (Number.isInteger(sqrt)) {
+    insights.push(`Perfect square (${sqrt}²)`);
+  }
+
+  // FIBONACCI
+  if (Number.isInteger(num) && num >= 0 && isFibonacci(num)) {
+    insights.push("Fibonacci number");
+  }
+
+  // PALINDROME
+  const str = Math.abs(num).toString();
+  if (str === str.split("").reverse().join("")) {
+    insights.push("Palindrome number");
+  }
+
+  // BINARY
+  if (Number.isInteger(num)) {
+    insights.push(`Binary: ${num.toString(2)}`);
+  }
+
+  // ROMAN
+  const roman = toRoman(Math.floor(Math.abs(num)));
+  if (roman) insights.push(`Roman: ${roman}`);
+
+  insightBox.innerHTML =
+    `<span class="small-label">🧠 Math Insight</span><br>` +
+    insights.map(i => `• ${i}`).join("<br>");
+
+  insightBox.style.display = "block";
+}
+
+// ======================================================
+// AUTO-HOOK INTO EXISTING CALCULATOR
+// (No edits needed anywhere else)
+// ======================================================
+
+const originalUpdateResult = window.updateResult;
+
+window.updateResult = function () {
+  if (originalUpdateResult) {
+    originalUpdateResult();
+  }
+
+  try {
+    const value =
+      typeof currentExpression !== "undefined"
+        ? currentExpression
+        : document.getElementById("result")?.value;
+
+    generateMathInsights(value);
+  } catch (e) {
+    console.log("Insight skipped:", e);
+  }
+};
+// ======================================================
+// 🧬 EXPRESSION DNA ANALYZER
+// ======================================================
+
+function analyzeExpressionDNA(expression) {
+
+  const dnaBox = document.getElementById("expression-dna");
+  if (!dnaBox) return;
+
+  if (!expression || typeof expression !== "string") {
+    dnaBox.style.display = "none";
+    return;
+  }
+
+  const operators = expression.match(/[+\-*/^]/g) || [];
+  const uniqueOperators = [...new Set(operators)];
+  const operands = expression.match(/[0-9.]+/g) || [];
+
+  // Parentheses depth calculation
+  let maxDepth = 0;
+  let currentDepth = 0;
+
+  for (let char of expression) {
+    if (char === "(") {
+      currentDepth++;
+      if (currentDepth > maxDepth) maxDepth = currentDepth;
+    }
+    if (char === ")") {
+      currentDepth--;
+    }
+  }
+
+  // Detect scientific keywords
+  const scientificKeywords = ["sin", "cos", "tan", "log", "sqrt"];
+  const isScientific = scientificKeywords.some(keyword =>
+    expression.toLowerCase().includes(keyword)
+  );
+
+  // Complexity score (simple weighted formula)
+  let score =
+    uniqueOperators.length * 2 +
+    maxDepth * 2 +
+    operands.length * 0.5 +
+    (isScientific ? 2 : 0);
+
+  score = Math.min(10, Math.round(score));
+
+  let type = "Arithmetic";
+  if (isScientific && uniqueOperators.length > 0) type = "Mixed Scientific";
+  else if (isScientific) type = "Scientific";
+
+  dnaBox.innerHTML =
+    `<span class="small-label">🧬 Expression DNA</span><br>` +
+    `• Operators used: ${operators.length}<br>` +
+    `• Unique operators: ${uniqueOperators.join(", ") || "None"}<br>` +
+    `• Parentheses depth: ${maxDepth}<br>` +
+    `• Operands: ${operands.length}<br>` +
+    `• Type: ${type}<br>` +
+    `• Complexity Score: ${score}/10`;
+
+  dnaBox.style.display = "block";
+}
+
+// ======================================================
+// AUTO-HOOK INTO CALCULATOR
+// ======================================================
+
+const originalCalculateResult = window.calculateResult;
+
+window.calculateResult = function () {
+  if (originalCalculateResult) {
+    originalCalculateResult();
+  }
+
+  try {
+    if (typeof currentExpression !== "undefined") {
+      analyzeExpressionDNA(currentExpression);
+    }
+  } catch (e) {
+    console.log("DNA analysis skipped:", e);
+  }
+};
+// ===============================
+// 🧬 TOGGLE BUTTON CONTROLLER
+// ===============================
+
+let dnaVisible = false;
+
+function toggleDNA() {
+  const box = document.getElementById("expression-dna");
+
+  if (!box) {
+    console.log("DNA box not found");
+    return;
+  }
+
+  dnaVisible = !dnaVisible;
+
+  if (dnaVisible) {
+    analyzeExpressionDNA();
+    box.style.display = "block";
+  } else {
+    box.style.display = "none";
+  }
+}
+
+
+// ===============================
+// 🧬 EXPRESSION DNA ANALYZER
+// ===============================
+
+function analyzeExpressionDNA() {
+
+  const dnaBox = document.getElementById("expression-dna");
+
+  // 🔥 CHANGE THIS ID if your display has another name
+  const display = document.getElementById("display");
+
+  if (!display || !dnaBox) return;
+
+  const expression = display.value || display.textContent;
+
+  if (!expression) {
+    dnaBox.innerHTML = "No expression to analyze.";
+    return;
+  }
+
+  const operators = expression.match(/[+\-*/^]/g) || [];
+  const uniqueOperators = [...new Set(operators)];
+  const operands = expression.match(/[0-9.]+/g) || [];
+
+  // Parentheses depth
+  let depth = 0;
+  let maxDepth = 0;
+
+  for (let char of expression) {
+    if (char === "(") {
+      depth++;
+      maxDepth = Math.max(maxDepth, depth);
+    }
+    if (char === ")") depth--;
+  }
+
+  // Scientific detection
+  const scientificWords = ["sin", "cos", "tan", "log", "sqrt"];
+  const isScientific = scientificWords.some(word =>
+    expression.toLowerCase().includes(word)
+  );
+
+  // Complexity score
+  let score =
+    uniqueOperators.length * 2 +
+    maxDepth * 2 +
+    operands.length * 0.5 +
+    (isScientific ? 2 : 0);
+
+  score = Math.min(10, Math.round(score));
+
+  let type = "Arithmetic";
+  if (isScientific && operators.length) type = "Mixed Scientific";
+  else if (isScientific) type = "Scientific";
+
+  dnaBox.innerHTML = `
+    <strong>🧬 Expression DNA</strong><br>
+    Operators used: ${operators.length}<br>
+    Unique operators: ${uniqueOperators.join(", ") || "None"}<br>
+    Parentheses depth: ${maxDepth}<br>
+    Operands: ${operands.length}<br>
+    Type: ${type}<br>
+    Complexity Score: ${score}/10
+  `;
+}
